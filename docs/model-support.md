@@ -17,6 +17,11 @@ The table records implemented mechanical compatibility, not a claim that every
 checkpoint has passed the scientific acceptance workflow. Exact checkpoint IDs
 and revisions will be added as reproducible smoke workflows are completed.
 
+The [validation harness](validation.md) pins Gemma 2 9B IT, Llama 3.1 8B
+Instruct, and Qwen 2.5 7B Instruct. All three have passing local random-model
+fixtures in chat and text modes. Real-checkpoint acceptance remains pending;
+see that page for the observed access blockers and exact HPC commands.
+
 ## Expected model structure
 
 A supported checkpoint must expose:

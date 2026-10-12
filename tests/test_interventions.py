@@ -136,6 +136,20 @@ class SteeringControllerTests(unittest.TestCase):
             )[0]
             np.testing.assert_allclose(decode.values[0, 0], [2.0, 0.0])
 
+    def test_empty_cache_is_prefill_without_cache_position(self) -> None:
+        controller = SteeringController(self.adapter, {0: self.delta})
+        cache = SimpleNamespace(get_seq_length=lambda: 0)
+        with controller.active(self.mask):
+            output = self.model.forward(
+                FakeTensor(np.zeros((1, 2, 2))), past_key_values=cache,
+            )[0]
+            np.testing.assert_allclose(output.values[0, 0], [2.0, 0.0])
+            cache.get_seq_length = lambda: 2
+            decoded = self.model.forward(
+                FakeTensor(np.zeros((1, 1, 2))), past_key_values=cache,
+            )[0]
+            np.testing.assert_allclose(decoded.values, 0.0)
+
     def test_cleanup_occurs_after_exception(self) -> None:
         controller = SteeringController(self.adapter, {0: self.delta})
         with self.assertRaisesRegex(RuntimeError, "boom"):

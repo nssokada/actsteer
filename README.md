@@ -131,6 +131,7 @@ Extraction matrices, readouts, and scheduler integration remain on the
 - [Architecture](docs/architecture.md)
 - [Artifacts and provenance](docs/artifacts.md)
 - [Model support](docs/model-support.md)
+- [Instrumentation validation and HPC commands](docs/validation.md)
 - [Roadmap](docs/roadmap.md)
 
 ## Development
@@ -141,8 +142,9 @@ Run the lightweight test suite without downloading model weights:
 python -m unittest discover -s tests -v
 ```
 
-Large-checkpoint behavior is validated separately because model downloads and
-accelerator runtimes are not appropriate for ordinary unit tests.
+For offline tiny-model smoke checks and the separate real-checkpoint gate, see
+[Instrumentation validation](docs/validation.md). A fixture pass does not validate
+a production checkpoint.
 
 ## License
 

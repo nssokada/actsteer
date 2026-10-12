@@ -31,7 +31,7 @@ class ConceptExample(BaseModel):
     metadata: dict[str, Any] = Field(default_factory=dict)
 
     @model_validator(mode="after")
-    def _require_exactly_one_content_form(self) -> "ConceptExample":
+    def _require_exactly_one_content_form(self) -> ConceptExample:
         has_text = self.text is not None and bool(self.text.strip())
         has_messages = self.messages is not None and len(self.messages) > 0
         if has_text == has_messages:
