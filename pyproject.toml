@@ -1,0 +1,59 @@
+[build-system]
+requires = ["setuptools>=69", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "actsteer"
+version = "0.1.0.dev0"
+description = "Research tools for activation capture, vector extraction, and targeted residual-stream steering."
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+authors = [
+  { name = "Noah Okada" },
+]
+dependencies = [
+  "numpy>=1.26,<3",
+  "pydantic>=2.7,<3",
+  "PyYAML>=6.0,<7",
+]
+
+[project.optional-dependencies]
+models = [
+  "torch>=2.4",
+  "transformers>=4.45",
+  "accelerate>=0.34",
+  "safetensors>=0.4",
+]
+data = [
+  "pandas>=2.2",
+  "pyarrow>=15",
+  "datasets>=2.20",
+]
+dev = [
+  "pytest>=8",
+  "ruff>=0.8",
+  "pyright>=1.1",
+]
+
+[project.scripts]
+actsteer = "actsteer.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
+
+[tool.pyright]
+pythonVersion = "3.11"
+include = ["src", "tests"]
+typeCheckingMode = "basic"
+
+[tool.pytest.ini_options]
+addopts = "-q"
+testpaths = ["tests"]

@@ -1,0 +1,23 @@
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.pyright/
+.coverage
+htmlcov/
+build/
+dist/
+.venv/
+.env
+.DS_Store
+
+# Local experiment state and large artifacts
+artifacts/
+runs/
+*.safetensors
+*.parquet
+*.pt
+*.ckpt
+
