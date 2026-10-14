@@ -19,6 +19,15 @@ scientific interpretation.
 > configuration and artifact schemas may change before v0.1. Pin a commit for
 > experiments that need exact reproducibility.
 
+**Checkpoint validation passed:** Gemma 2 9B IT, Llama 3.1 8B Instruct, and
+Qwen 2.5 7B Instruct each passed **20/20 instrumentation checks** on an NVIDIA
+H100 80GB HBM3 in BF16. The tested source and experimental pin is
+`a960c22107d720cfc515e00b45c126c184135559`; later documentation commits do not
+change that pin. See the [validation record](docs/validation/2026-10-12-a960c221.md)
+for exact checkpoint/tokenizer revisions, environment, commands, and evidence
+checksums. This result covers those checkpoints and numerical settings;
+[broader adapter support](docs/model-support.md) is not blanket checkpoint validation.
+
 ## Features
 
 - Hugging Face Transformers with native PyTorch hooks.

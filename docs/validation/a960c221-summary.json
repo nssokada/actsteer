@@ -1,0 +1,457 @@
+{
+  "schema_version": 1,
+  "description": "Portable selection of audited evidence fields; original reports and manifests remain unchanged in the private archive.",
+  "tested_source_sha": "a960c22107d720cfc515e00b45c126c184135559",
+  "tested_working_tree": "clean",
+  "execution_date_utc": "2026-10-12",
+  "evidence_audited_on": "2026-10-13",
+  "acceptance": {
+    "status": "validated",
+    "sha": "a960c22107d720cfc515e00b45c126c184135559",
+    "families": [
+      "gemma",
+      "llama",
+      "qwen"
+    ]
+  },
+  "environment": {
+    "python": "3.11.15 (main, Jun 11 2026, 15:20:16) [GCC 14.3.0]",
+    "platform": "Linux-5.14.0-427.13.1.el9_4.x86_64-x86_64-with-glibc2.34",
+    "packages": {
+      "actsteer": "0.1.0.dev0",
+      "torch": "2.14.1",
+      "transformers": "4.57.6",
+      "accelerate": "1.15.0",
+      "numpy": "2.4.6",
+      "tokenizers": "0.22.2",
+      "safetensors": "0.8.0",
+      "huggingface-hub": "0.36.2"
+    },
+    "cuda": "13.0",
+    "cuda_available": true,
+    "gpus": [
+      "NVIDIA H100 80GB HBM3"
+    ],
+    "cudnn": 92400
+  },
+  "nvidia_driver": "580.126.16",
+  "numerics": {
+    "dtype": "torch.bfloat16",
+    "attention_implementation": "eager",
+    "atol": 0.0,
+    "rtol": 0.0,
+    "seed": 1729,
+    "deterministic_algorithms": true,
+    "tf32": false,
+    "generation": {
+      "do_sample": false,
+      "new_tokens": 4,
+      "use_cache": true
+    }
+  },
+  "models": [
+    {
+      "family": "gemma",
+      "model": {
+        "id": "google/gemma-2-9b-it",
+        "revision": "11c9b309abf73637e4b6f9a3fa1e92e615547819",
+        "tokenizer_revision": "11c9b309abf73637e4b6f9a3fa1e92e615547819",
+        "dtype": "bfloat16",
+        "mode": "chat",
+        "resolved_model_revision": "11c9b309abf73637e4b6f9a3fa1e92e615547819",
+        "resolved_tokenizer_revision": "11c9b309abf73637e4b6f9a3fa1e92e615547819"
+      },
+      "adapter": "GemmaAdapter",
+      "model_type": "gemma2",
+      "status": "pass",
+      "checks_passed": 20,
+      "checks_required": 20,
+      "checks": [
+        {
+          "name": "named_spans_and_token_selectors",
+          "status": "pass"
+        },
+        {
+          "name": "plain_text_rendering",
+          "status": "pass"
+        },
+        {
+          "name": "layer_selectors_and_adapter",
+          "status": "pass"
+        },
+        {
+          "name": "unhooked_baseline",
+          "status": "pass"
+        },
+        {
+          "name": "baseline_repeat",
+          "status": "pass"
+        },
+        {
+          "name": "deterministic_baseline_generation",
+          "status": "pass"
+        },
+        {
+          "name": "reduced_pre_and_post_capture",
+          "status": "pass"
+        },
+        {
+          "name": "direction_calibration_and_total_budget",
+          "status": "pass"
+        },
+        {
+          "name": "zero_strength_logits",
+          "status": "pass"
+        },
+        {
+          "name": "zero_strength_generation_and_cleanup",
+          "status": "pass"
+        },
+        {
+          "name": "inactive_mask_logits",
+          "status": "pass"
+        },
+        {
+          "name": "inactive_mask_generation_and_cleanup",
+          "status": "pass"
+        },
+        {
+          "name": "encode_release_layer_token_and_cache_selectivity",
+          "status": "pass"
+        },
+        {
+          "name": "response_only_layer_token_and_cache_selectivity",
+          "status": "pass"
+        },
+        {
+          "name": "continuous_layer_token_and_cache_selectivity",
+          "status": "pass"
+        },
+        {
+          "name": "single_layer_selectivity",
+          "status": "pass"
+        },
+        {
+          "name": "normal_exception_and_partial_install_cleanup",
+          "status": "pass"
+        },
+        {
+          "name": "baseline_after_cleanup",
+          "status": "pass"
+        },
+        {
+          "name": "baseline_generation_after_cleanup",
+          "status": "pass"
+        },
+        {
+          "name": "immutable_artifact_reload_and_deterministic_reuse",
+          "status": "pass"
+        }
+      ],
+      "layers": [
+        10,
+        31
+      ],
+      "artifact_id": "602a89c0dc25c480dc30fe45922f54168f983db961ad6144972fb373892372b6",
+      "artifact": "gemma/artifacts/instrumentation/602a89c0dc25c480dc30fe45922f54168f983db961ad6144972fb373892372b6",
+      "report": "gemma/report.json",
+      "started_at": "2026-10-12T23:31:14.916688+00:00",
+      "finished_at": "2026-10-12T23:32:20.228819+00:00",
+      "elapsed_seconds_including_load": 65.312131,
+      "memory_bytes": {
+        "available": true,
+        "allocated_bytes": 18516966912,
+        "peak_allocated_bytes": 18546318848,
+        "reserved_bytes": 18578669568,
+        "peak_reserved_bytes": 18578669568
+      }
+    },
+    {
+      "family": "llama",
+      "model": {
+        "id": "meta-llama/Llama-3.1-8B-Instruct",
+        "revision": "0e9e39f249a16976918f6564b8830bc894c89659",
+        "tokenizer_revision": "0e9e39f249a16976918f6564b8830bc894c89659",
+        "dtype": "bfloat16",
+        "mode": "chat",
+        "resolved_model_revision": "0e9e39f249a16976918f6564b8830bc894c89659",
+        "resolved_tokenizer_revision": "0e9e39f249a16976918f6564b8830bc894c89659"
+      },
+      "adapter": "LlamaAdapter",
+      "model_type": "llama",
+      "status": "pass",
+      "checks_passed": 20,
+      "checks_required": 20,
+      "checks": [
+        {
+          "name": "named_spans_and_token_selectors",
+          "status": "pass"
+        },
+        {
+          "name": "plain_text_rendering",
+          "status": "pass"
+        },
+        {
+          "name": "layer_selectors_and_adapter",
+          "status": "pass"
+        },
+        {
+          "name": "unhooked_baseline",
+          "status": "pass"
+        },
+        {
+          "name": "baseline_repeat",
+          "status": "pass"
+        },
+        {
+          "name": "deterministic_baseline_generation",
+          "status": "pass"
+        },
+        {
+          "name": "reduced_pre_and_post_capture",
+          "status": "pass"
+        },
+        {
+          "name": "direction_calibration_and_total_budget",
+          "status": "pass"
+        },
+        {
+          "name": "zero_strength_logits",
+          "status": "pass"
+        },
+        {
+          "name": "zero_strength_generation_and_cleanup",
+          "status": "pass"
+        },
+        {
+          "name": "inactive_mask_logits",
+          "status": "pass"
+        },
+        {
+          "name": "inactive_mask_generation_and_cleanup",
+          "status": "pass"
+        },
+        {
+          "name": "encode_release_layer_token_and_cache_selectivity",
+          "status": "pass"
+        },
+        {
+          "name": "response_only_layer_token_and_cache_selectivity",
+          "status": "pass"
+        },
+        {
+          "name": "continuous_layer_token_and_cache_selectivity",
+          "status": "pass"
+        },
+        {
+          "name": "single_layer_selectivity",
+          "status": "pass"
+        },
+        {
+          "name": "normal_exception_and_partial_install_cleanup",
+          "status": "pass"
+        },
+        {
+          "name": "baseline_after_cleanup",
+          "status": "pass"
+        },
+        {
+          "name": "baseline_generation_after_cleanup",
+          "status": "pass"
+        },
+        {
+          "name": "immutable_artifact_reload_and_deterministic_reuse",
+          "status": "pass"
+        }
+      ],
+      "layers": [
+        8,
+        23
+      ],
+      "artifact_id": "93c11911662b9fd85f706c7ed57fbf0233870e0f9bdf4baa0ce6c90732023e80",
+      "artifact": "llama/artifacts/instrumentation/93c11911662b9fd85f706c7ed57fbf0233870e0f9bdf4baa0ce6c90732023e80",
+      "report": "llama/report.json",
+      "started_at": "2026-10-12T23:32:24.698163+00:00",
+      "finished_at": "2026-10-12T23:32:58.964957+00:00",
+      "elapsed_seconds_including_load": 34.266794,
+      "memory_bytes": {
+        "available": true,
+        "allocated_bytes": 16094077440,
+        "peak_allocated_bytes": 16118907904,
+        "reserved_bytes": 16141778944,
+        "peak_reserved_bytes": 16141778944
+      }
+    },
+    {
+      "family": "qwen",
+      "model": {
+        "id": "Qwen/Qwen2.5-7B-Instruct",
+        "revision": "a09a35458c702b33eeacc393d103063234e8bc28",
+        "tokenizer_revision": "a09a35458c702b33eeacc393d103063234e8bc28",
+        "dtype": "bfloat16",
+        "mode": "chat",
+        "resolved_model_revision": "a09a35458c702b33eeacc393d103063234e8bc28",
+        "resolved_tokenizer_revision": "a09a35458c702b33eeacc393d103063234e8bc28"
+      },
+      "adapter": "QwenAdapter",
+      "model_type": "qwen2",
+      "status": "pass",
+      "checks_passed": 20,
+      "checks_required": 20,
+      "checks": [
+        {
+          "name": "named_spans_and_token_selectors",
+          "status": "pass"
+        },
+        {
+          "name": "plain_text_rendering",
+          "status": "pass"
+        },
+        {
+          "name": "layer_selectors_and_adapter",
+          "status": "pass"
+        },
+        {
+          "name": "unhooked_baseline",
+          "status": "pass"
+        },
+        {
+          "name": "baseline_repeat",
+          "status": "pass"
+        },
+        {
+          "name": "deterministic_baseline_generation",
+          "status": "pass"
+        },
+        {
+          "name": "reduced_pre_and_post_capture",
+          "status": "pass"
+        },
+        {
+          "name": "direction_calibration_and_total_budget",
+          "status": "pass"
+        },
+        {
+          "name": "zero_strength_logits",
+          "status": "pass"
+        },
+        {
+          "name": "zero_strength_generation_and_cleanup",
+          "status": "pass"
+        },
+        {
+          "name": "inactive_mask_logits",
+          "status": "pass"
+        },
+        {
+          "name": "inactive_mask_generation_and_cleanup",
+          "status": "pass"
+        },
+        {
+          "name": "encode_release_layer_token_and_cache_selectivity",
+          "status": "pass"
+        },
+        {
+          "name": "response_only_layer_token_and_cache_selectivity",
+          "status": "pass"
+        },
+        {
+          "name": "continuous_layer_token_and_cache_selectivity",
+          "status": "pass"
+        },
+        {
+          "name": "single_layer_selectivity",
+          "status": "pass"
+        },
+        {
+          "name": "normal_exception_and_partial_install_cleanup",
+          "status": "pass"
+        },
+        {
+          "name": "baseline_after_cleanup",
+          "status": "pass"
+        },
+        {
+          "name": "baseline_generation_after_cleanup",
+          "status": "pass"
+        },
+        {
+          "name": "immutable_artifact_reload_and_deterministic_reuse",
+          "status": "pass"
+        }
+      ],
+      "layers": [
+        7,
+        20
+      ],
+      "artifact_id": "ecd6ec4947fd52212f8aace2973554575772ef3e0803a921d9947dc1fa0a34e8",
+      "artifact": "qwen/artifacts/instrumentation/ecd6ec4947fd52212f8aace2973554575772ef3e0803a921d9947dc1fa0a34e8",
+      "report": "qwen/report.json",
+      "started_at": "2026-10-12T23:33:00.304016+00:00",
+      "finished_at": "2026-10-12T23:33:31.247919+00:00",
+      "elapsed_seconds_including_load": 30.943903,
+      "memory_bytes": {
+        "available": true,
+        "allocated_bytes": 15268457984,
+        "peak_allocated_bytes": 15293935104,
+        "reserved_bytes": 15321792512,
+        "peak_reserved_bytes": 15321792512
+      }
+    }
+  ],
+  "local_checks": {
+    "unit_tests_passed": 41,
+    "fixture_runs_passed": 6,
+    "checks_per_fixture": 20,
+    "ruff": "pass",
+    "pyright": "0 errors, 0 warnings",
+    "fixture_rejected_by_real_gate": true,
+    "clean_export_wheel_unit_tests_passed": 41,
+    "gpu_inference_rerun_locally": false
+  },
+  "evidence_audit": {
+    "status": "pass",
+    "artifact_payloads_verified": 15,
+    "numpy_arrays_verified": 12,
+    "calibration_recomputed": true,
+    "aggregate_acceptance_recomputed": true,
+    "raw_evidence_unchanged": true,
+    "copied_artifact_paths_rebound_only_in_memory": true
+  },
+  "evidence": {
+    "hpc_files_sha256": {
+      "acceptance.json": "018b70206c8c89479f24369129f8bed337483ee7316ad1ff05eae1eda59f8154",
+      "gemma/artifacts/instrumentation/602a89c0dc25c480dc30fe45922f54168f983db961ad6144972fb373892372b6/capture-10.npy": "448ff0321d5f74be846ad864095ab58ff8a2eb1b7ea4eafda1639f3d2681a1d7",
+      "gemma/artifacts/instrumentation/602a89c0dc25c480dc30fe45922f54168f983db961ad6144972fb373892372b6/capture-31.npy": "7671215804e02e8067237cc69e483e8768c985fafdef88effac7595ef76334f7",
+      "gemma/artifacts/instrumentation/602a89c0dc25c480dc30fe45922f54168f983db961ad6144972fb373892372b6/manifest.json": "7926174bedfa279ffd2067e369bcf40ce9025488842f9ea6dac891ecc010cd0f",
+      "gemma/artifacts/instrumentation/602a89c0dc25c480dc30fe45922f54168f983db961ad6144972fb373892372b6/metadata.json": "c5ef8829a6a158ce30056b2dae1bf96f3d48a2600777a5c4758542baacfc4480",
+      "gemma/artifacts/instrumentation/602a89c0dc25c480dc30fe45922f54168f983db961ad6144972fb373892372b6/vector-10.npy": "2bf5cb7cdde9cbd683a2894f8e96f6ef7ac2c59713599980dda93efd94f70653",
+      "gemma/artifacts/instrumentation/602a89c0dc25c480dc30fe45922f54168f983db961ad6144972fb373892372b6/vector-31.npy": "dbb099b8f603f237b6ce4683f44c5afe33de856e3d311d9146372ea326564086",
+      "gemma/report.json": "809961bb7d45644aa5329516f59d9ea73e6a4a54cd855dac685b0993c23e101f",
+      "llama/artifacts/instrumentation/93c11911662b9fd85f706c7ed57fbf0233870e0f9bdf4baa0ce6c90732023e80/capture-23.npy": "d3f56671e439ead0473a25b2a83b25289077710e12bf76011718fb131dded00e",
+      "llama/artifacts/instrumentation/93c11911662b9fd85f706c7ed57fbf0233870e0f9bdf4baa0ce6c90732023e80/capture-8.npy": "6f078e1fe1329c5e9ed4cf89a3e58959ea68acd7169c8c50a0d837dc6b7348ae",
+      "llama/artifacts/instrumentation/93c11911662b9fd85f706c7ed57fbf0233870e0f9bdf4baa0ce6c90732023e80/manifest.json": "fd2a288153bb952b9d8f0a3731171c8706e200bc159f532beb32a8f68aa1db39",
+      "llama/artifacts/instrumentation/93c11911662b9fd85f706c7ed57fbf0233870e0f9bdf4baa0ce6c90732023e80/metadata.json": "8dcbd13b56e4a79f8f871d003ee2f3f08213e2d47940658b59ff4f616ead1fc6",
+      "llama/artifacts/instrumentation/93c11911662b9fd85f706c7ed57fbf0233870e0f9bdf4baa0ce6c90732023e80/vector-23.npy": "f5c7f768e4535c97eb6ee49d00571d779b313ea3fbf15eff33ed416c896e891b",
+      "llama/artifacts/instrumentation/93c11911662b9fd85f706c7ed57fbf0233870e0f9bdf4baa0ce6c90732023e80/vector-8.npy": "00b346e16665b43d533ae701d2244dedd90aa4217bc5fd3f85eff1bf10b95b9a",
+      "llama/report.json": "afbc3e2273c973da53f45c296670c598988b420a3d6ea45271c2b33babb44c47",
+      "nvidia-smi.txt": "90031bc60412a9e8374f9ad570360102247344c583bf212ef07274d4af981a8f",
+      "pip-freeze.txt": "7ab45b7ca3783bf510ccb9329db702b0742ed0424639fad1a08ffe394a8907ff",
+      "qwen/artifacts/instrumentation/ecd6ec4947fd52212f8aace2973554575772ef3e0803a921d9947dc1fa0a34e8/capture-20.npy": "6916766bf5506cd3389a70b1f83e36d1f9c8f1f4131fb039efeda5636ee7500f",
+      "qwen/artifacts/instrumentation/ecd6ec4947fd52212f8aace2973554575772ef3e0803a921d9947dc1fa0a34e8/capture-7.npy": "ab92cc59ee166aa1b9aa580eb5a729f3af74f6142efef2860820e87238188953",
+      "qwen/artifacts/instrumentation/ecd6ec4947fd52212f8aace2973554575772ef3e0803a921d9947dc1fa0a34e8/manifest.json": "6d38cf5547eadf354fa6c66ed449bb500df029484031dc6b48fc1b3bc9c50a9a",
+      "qwen/artifacts/instrumentation/ecd6ec4947fd52212f8aace2973554575772ef3e0803a921d9947dc1fa0a34e8/metadata.json": "21b118c32a47e54582ce684cb1acb210b7ecaaca901d1d815449b8c59786f5d8",
+      "qwen/artifacts/instrumentation/ecd6ec4947fd52212f8aace2973554575772ef3e0803a921d9947dc1fa0a34e8/vector-20.npy": "dbb099b8f603f237b6ce4683f44c5afe33de856e3d311d9146372ea326564086",
+      "qwen/artifacts/instrumentation/ecd6ec4947fd52212f8aace2973554575772ef3e0803a921d9947dc1fa0a34e8/vector-7.npy": "2bf5cb7cdde9cbd683a2894f8e96f6ef7ac2c59713599980dda93efd94f70653",
+      "qwen/report.json": "65eab5816c650fe52359eb16d0cd889bda3c5c45bbb8da992cf20f94bfb06cb1"
+    },
+    "archive": {
+      "filename": "actsteer-validated-a960c221-evidence.tar.gz",
+      "bytes": 1196445,
+      "sha256": "0c9588e13291bd5183206446643c0cf80c53c08a999a4cb805a15bc6880df6b9",
+      "publicly_uploaded": false
+    },
+    "scheduler_log_sha256": "75299f08baa5211383b08167c0f6d9a8e296a9dd2091f02a8d349f26a93a4457"
+  },
+  "scope": "Generic instrumentation on the three pinned instruction-tuned checkpoints in chat mode, including plain-text rendering; no scientific effect or blanket model-family validation."
+}

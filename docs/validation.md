@@ -6,6 +6,13 @@ same clean Git SHA. A local fixture pass, accessible model metadata, a submitted
 job, or a prepared command is not acceptance. Keep the JSON reports and immutable
 artifacts with the downstream study's dependency pin.
 
+**Validated run (2026-10-12):** all three pinned checkpoints passed 20/20 checks
+on NVIDIA H100 80GB HBM3 in BF16 at clean source SHA
+`a960c22107d720cfc515e00b45c126c184135559`. See the
+[portable validation record](validation/2026-10-12-a960c221.md) for results,
+environment, and evidence checksums. This remains the experimental pin; newer
+documentation commits are not additional GPU-validated source revisions.
+
 The harness is scheduler-neutral. It uses a seeded Gaussian unit vector and four
 small lexical prompts solely to test instrumentation. It contains no behavioral
 classifier, study dataset, hypothesis, or scientific interpretation.
@@ -93,92 +100,99 @@ before an offline compute-node job. For gated repositories, authenticate with
 `hf auth login` using an account that has the required model access.
 Never put authentication tokens in reports or job scripts.
 
-## Exact HPC path
+## Reproduce the validated HPC run
 
-The local checkout need not be published to GitHub. Export the candidate commit:
-
-```bash
-ACTSTEER_SHA=$(git rev-parse HEAD)
-git bundle create runs/actsteer-validation.bundle HEAD
-scp runs/actsteer-validation.bundle nokada@login.hpc.caltech.edu:actsteer-validation.bundle
-ssh nokada@login.hpc.caltech.edu
-```
-
-On the HPC host, import that bundle into a new checkout:
+Use a separate, clean checkout of the **tested source**, not the documentation
+branch's current HEAD. From a network-enabled host:
 
 ```bash
-git init "$HOME/actsteer-validation"
-git -C "$HOME/actsteer-validation" fetch "$HOME/actsteer-validation.bundle" HEAD
-git -C "$HOME/actsteer-validation" checkout --detach FETCH_HEAD
+export ACTSTEER_SHA=a960c22107d720cfc515e00b45c126c184135559
+git clone https://github.com/nssokada/actsteer.git "$HOME/actsteer-validation"
 cd "$HOME/actsteer-validation"
-export ACTSTEER_SHA=$(git rev-parse HEAD)
-# Compare this SHA with the candidate reported by the local run before proceeding.
-```
-
-Use an available Python 3.11+ environment (the repository requires >=3.11).
-Cluster module availability and account association must be checked after login;
-no module name or allocation account is guessed by the script.
-
-```bash
+git checkout --detach "$ACTSTEER_SHA"
 python3.11 -m venv .venv
 source .venv/bin/activate
 python -m pip install -e '.[models,dev]' -c requirements/validation-constraints.txt
-export HF_HOME="/resnick/scratch/$USER/hf-actsteer"
-mkdir -p "$HF_HOME" "$HOME/actsteer-validation-results"
-hf auth login
-python -m actsteer.validation.prepare --download \
-  --output "runs/checkpoint-download-$ACTSTEER_SHA.json"
-export ACTSTEER_RESULTS="$HOME/actsteer-validation-results/$ACTSTEER_SHA-$(date -u +%Y%m%dT%H%M%SZ)"
-sbatch scripts/validate-slurm.sh
-# H200 alternative:
-# sbatch --gres=gpu:nvidia_h200:1 scripts/validate-slurm.sh
 ```
 
-The Slurm wrapper requests one H100, 8 CPUs, 96 GB host RAM, and 2 hours. It runs
-all families sequentially even if one fails, then runs the aggregate gate. Add
-`--account=YOUR_ACTUAL_ACCOUNT` only if required by the user's allocation. Inspect
-`squeue -u "$USER"`, the `actsteer-validation-JOBID.out` log, and `sacct -j JOBID`
-after submission. A job ID or exit code without the reports is insufficient.
-
-The GPU partition and typed H100/H200 resource tokens follow the
-[Caltech GPU documentation](https://www.hpc.caltech.edu/docs/documentation/gpu-computing.html).
-The documented login host and password/Duo flow are in the
-[Caltech quick start](https://www.hpc.caltech.edu/docs/documentation/quick-start.html).
-These are documented commands, not proof of the user's allocation or authentication.
-
-On an already allocated GPU, the exact scheduler-neutral commands are:
+The recorded environment used Python 3.11.15 and CUDA 13.0; match the
+[recorded versions](validation/2026-10-12-a960c221.md) when reproducing it.
+Use a cluster-approved persistent cache location with space for the checkpoints.
+The example paths below are outside the checkout; replace them if necessary.
+For gated repositories, obtain access and authenticate with `hf auth login`.
 
 ```bash
-python -m actsteer.validation.smoke --family gemma --output "$ACTSTEER_RESULTS/gemma"
-python -m actsteer.validation.smoke --family llama --output "$ACTSTEER_RESULTS/llama"
-python -m actsteer.validation.smoke --family qwen --output "$ACTSTEER_RESULTS/qwen"
+export HF_HOME="$HOME/hf-cache"
+export ACTSTEER_RESULTS_ROOT="$HOME/actsteer-validation-results"
+mkdir -p "$HF_HOME" "$ACTSTEER_RESULTS_ROOT"
+python -m actsteer.validation.prepare --download \
+  --output "runs/checkpoint-download-$ACTSTEER_SHA.json"
+export ACTSTEER_RESULTS="$ACTSTEER_RESULTS_ROOT/$ACTSTEER_SHA-$(date -u +%Y%m%dT%H%M%SZ)"
+test "$(git rev-parse HEAD)" = "$ACTSTEER_SHA"
+test -z "$(git status --porcelain --untracked-files=all)"
+sbatch --output="$ACTSTEER_RESULTS.slurm-%j.out" scripts/validate-slurm.sh
+# For a separate H200 run, replace the preceding submission with:
+# sbatch --gres=gpu:nvidia_h200:1 --output="$ACTSTEER_RESULTS.slurm-%j.out" scripts/validate-slurm.sh
+```
+
+**The `--output` override is required.** The pinned wrapper's default log path is
+inside the checkout. Slurm creates that file before the script runs, so the
+clean-working-tree preflight rejects the resulting untracked file. Both results
+and scheduler logs must be outside the checkout. Create the results **parent**
+directory before submitting; the wrapper creates the new run directory itself.
+Use a fresh run path for every submission and preserve earlier evidence.
+This documentation corrects the invocation; the tested executable is unchanged.
+
+The wrapper requests one H100, 8 CPUs, 96 GB host RAM, and a 2-hour limit. It runs
+all families sequentially even if one fails, then runs aggregate acceptance.
+Adjust partition, typed GPU resource, and account flags to the site's allocation.
+H200 is supported by the gate but was not exercised in this recorded run.
+Inspect `squeue -u "$USER"`, `sacct -j JOBID`, and
+`"$ACTSTEER_RESULTS.slurm-JOBID.out"`. A completed job alone is insufficient:
+check all three reports and `acceptance.json`.
+
+On an already allocated H100, the equivalent scheduler-neutral commands are
+below. Use the same activated environment and fresh, absolute results path from
+above; do not run this block in addition to submitting the wrapper for that path.
+
+```bash
+export HF_HUB_OFFLINE=1
+export TRANSFORMERS_OFFLINE=1
+export CUBLAS_WORKSPACE_CONFIG=:4096:8
+mkdir "$ACTSTEER_RESULTS"
+python -m pip freeze > "$ACTSTEER_RESULTS/pip-freeze.txt"
+nvidia-smi > "$ACTSTEER_RESULTS/nvidia-smi.txt"
+for family in gemma llama qwen; do
+  python -m actsteer.validation.smoke --family "$family" \
+    --manifest configs/validation-models.json --output "$ACTSTEER_RESULTS/$family"
+done
 python -m actsteer.validation.accept --sha "$ACTSTEER_SHA" \
+  --manifest configs/validation-models.json \
   --output "$ACTSTEER_RESULTS/acceptance.json" \
   "$ACTSTEER_RESULTS/gemma/report.json" "$ACTSTEER_RESULTS/llama/report.json" \
   "$ACTSTEER_RESULTS/qwen/report.json"
 ```
 
-Keep the complete results directory, including `artifacts/` inside each family,
-`pip-freeze.txt`, and `nvidia-smi.txt`. Run acceptance on the execution host before
-copying results; report artifact paths are absolute. Verify `acceptance.json`
-identifies the intended clean SHA and all three families. Only then update the
-coordination repository's `STATUS.md` with the validated SHA. The toolkit itself
-has no dependency on that coordination repository.
+The observed result was:
 
-## Current execution status (2026-10-12)
+```json
+{
+  "status": "validated",
+  "sha": "a960c22107d720cfc515e00b45c126c184135559",
+  "families": ["gemma", "llama", "qwen"]
+}
+```
 
-Local checks pass; the real-checkpoint gate remains **not satisfied**.
-No production checkpoint was loaded and no GPU job was submitted in this session.
+## Evidence retention and copied reports
 
-Observed blockers:
+Keep the complete results directory, including every family's `artifacts/`,
+`pip-freeze.txt`, `nvidia-smi.txt`, and the sibling scheduler log. Run acceptance
+on the execution host before copying: the original reports contain absolute
+artifact paths. After copying, preserve report bytes and remap artifact locations
+only in memory as shown in the [validation record](validation/2026-10-12-a960c221.md).
+Verify checksums before auditing the copied evidence.
 
-- This execution environment is macOS ARM64 with no CUDA GPU.
-- A read-only `ssh -o BatchMode=yes -o ConnectTimeout=10 -o StrictHostKeyChecking=yes
-  nokada@login.hpc.caltech.edu ...` probe reached the server but failed with
-  `Permission denied (publickey,keyboard-interactive,hostbased)` (exit 255).
-- Gemma and Llama access preflight returned `401 GatedRepoError`; Qwen metadata
-  access passed. Remote credentials may differ, but are not established here.
-
-The remaining path is authenticated HPC login, authorized checkpoint download,
-then the three real runs and aggregate acceptance command above. CPU fixtures
-must not be presented as validated production checkpoints.
+Store raw evidence in access-controlled durable storage. Reports, manifests,
+environment listings, and logs can contain private filesystem or infrastructure
+identifiers, so inspect them before any public upload. The public validation
+summary and checksum index are portable; they do not replace the complete archive.
