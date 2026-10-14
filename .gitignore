@@ -14,8 +14,8 @@ dist/
 .DS_Store
 
 # Local experiment state and large artifacts
-artifacts/
-runs/
+/artifacts/
+/runs/
 *.safetensors
 *.parquet
 *.pt

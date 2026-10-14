@@ -2,9 +2,9 @@
 
 from __future__ import annotations
 
-from collections.abc import Mapping
+from collections.abc import Iterator, Mapping
 from contextlib import contextmanager
-from typing import Any, Iterator
+from typing import Any
 
 from actsteer.core.capture.reducers import hidden_from_output, replace_hidden
 from actsteer.core.interventions.windows import InterventionWindow
@@ -91,7 +91,13 @@ class SteeringController:
         if cache_position is not None and cache_position.numel() > 0:
             self._in_prefill = int(cache_position.reshape(-1)[0].item()) == 0
             return
-        self._in_prefill = kwargs.get("past_key_values") is None
+        cache = kwargs.get("past_key_values")
+        # Transformers may supply an allocated but empty Cache on the first
+        # forward even when cache_position is not exposed at this boundary.
+        if cache is not None and hasattr(cache, "get_seq_length"):
+            self._in_prefill = int(cache.get_seq_length()) == 0
+        else:
+            self._in_prefill = cache is None
 
     def install(self) -> None:
         if self.installed:
@@ -118,7 +124,7 @@ class SteeringController:
         self._in_prefill = True
 
     @contextmanager
-    def active(self, prompt_mask: Any) -> Iterator["SteeringController"]:
+    def active(self, prompt_mask: Any) -> Iterator[SteeringController]:
         self.set_prompt_mask(prompt_mask)
         self.install()
         try:

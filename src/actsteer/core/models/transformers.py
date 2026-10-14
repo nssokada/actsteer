@@ -72,7 +72,7 @@ def adapter_from_objects(model: Any, tokenizer: Any) -> ModelAdapter:
 
     model_type = getattr(model.config, "model_type", None)
     try:
-        adapter_type = _MODEL_TYPE_ADAPTERS[model_type]
+        adapter_type = _MODEL_TYPE_ADAPTERS[model_type if isinstance(model_type, str) else ""]
     except KeyError as error:
         supported = ", ".join(sorted(_MODEL_TYPE_ADAPTERS))
         raise ValueError(
@@ -81,7 +81,10 @@ def adapter_from_objects(model: Any, tokenizer: Any) -> ModelAdapter:
     return adapter_type(model=model, tokenizer=tokenizer)
 
 
-def load_model(config: ModelConfig, *, device_map: str | None = "auto") -> ModelAdapter:
+def load_model(
+    config: ModelConfig, *, device_map: str | None = "auto",
+    attn_implementation: str | None = None,
+) -> ModelAdapter:
     """Load a configured causal LM with lazy heavy dependencies."""
 
     try:
@@ -102,6 +105,7 @@ def load_model(config: ModelConfig, *, device_map: str | None = "auto") -> Model
         config.id,
         revision=config.revision,
         torch_dtype=dtype,
+        **({"attn_implementation": attn_implementation} if attn_implementation else {}),
         device_map=device_map,
         trust_remote_code=False,
     )

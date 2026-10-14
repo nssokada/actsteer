@@ -9,6 +9,8 @@ from actsteer.core.capture.reducers import hidden_from_output, masked_mean
 from actsteer.core.capture.sites import ActivationPoint, ActivationSite
 from actsteer.core.models.base import ModelAdapter
 
+_DEFAULT_SITE = ActivationSite()
+
 
 def capture_reduced_forward(
     adapter: ModelAdapter,
@@ -16,7 +18,7 @@ def capture_reduced_forward(
     *,
     layers: Sequence[int],
     token_mask: Any,
-    site: ActivationSite = ActivationSite(),
+    site: ActivationSite = _DEFAULT_SITE,
 ) -> tuple[Any, dict[int, Any]]:
     """Run one model forward and return CPU float32 ``[B,H]`` captures.
 

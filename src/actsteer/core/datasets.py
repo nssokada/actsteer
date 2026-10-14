@@ -8,7 +8,7 @@ from collections import Counter
 from collections.abc import Iterable, Iterator, Mapping, Sequence
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any
+from typing import Any, overload
 
 from pydantic import ValidationError
 
@@ -42,7 +42,7 @@ class ConceptDataset(Sequence[ConceptExample]):
         self._examples = materialized
 
     @classmethod
-    def from_records(cls, records: Iterable[ConceptExample | dict]) -> "ConceptDataset":
+    def from_records(cls, records: Iterable[ConceptExample | dict]) -> ConceptDataset:
         examples: list[ConceptExample] = []
         for index, record in enumerate(records):
             try:
@@ -57,7 +57,7 @@ class ConceptDataset(Sequence[ConceptExample]):
         return cls(examples)
 
     @classmethod
-    def from_jsonl(cls, path: str | Path) -> "ConceptDataset":
+    def from_jsonl(cls, path: str | Path) -> ConceptDataset:
         """Load normalized :class:`ConceptExample` mappings from JSON Lines."""
 
         source = Path(path)
@@ -87,7 +87,7 @@ class ConceptDataset(Sequence[ConceptExample]):
         pair_id_column: str | None = None,
         split_column: str | None = None,
         metadata_columns: Sequence[str] = (),
-    ) -> "ConceptDataset":
+    ) -> ConceptDataset:
         """Map arbitrary table-like records into the normalized schema.
 
         Exactly one of ``text_column`` or ``messages_column`` must be supplied.
@@ -125,7 +125,7 @@ class ConceptDataset(Sequence[ConceptExample]):
         return cls.from_records(normalized)
 
     @classmethod
-    def from_parquet(cls, path: str | Path, **mapping: Any) -> "ConceptDataset":
+    def from_parquet(cls, path: str | Path, **mapping: Any) -> ConceptDataset:
         """Load a Parquet table through the optional pandas/pyarrow extra."""
 
         try:
@@ -148,6 +148,12 @@ class ConceptDataset(Sequence[ConceptExample]):
 
     def __len__(self) -> int:
         return len(self._examples)
+
+    @overload
+    def __getitem__(self, index: int) -> ConceptExample: ...
+
+    @overload
+    def __getitem__(self, index: slice) -> tuple[ConceptExample, ...]: ...
 
     def __getitem__(self, index: int | slice) -> ConceptExample | tuple[ConceptExample, ...]:
         return self._examples[index]

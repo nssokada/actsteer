@@ -12,7 +12,7 @@ from actsteer.core.datasets import ConceptDataset
 
 
 def _stable_id(concept: str, text: str) -> str:
-    digest = hashlib.sha256(f"{concept}\0{text}".encode("utf-8")).hexdigest()[:20]
+    digest = hashlib.sha256(f"{concept}\0{text}".encode()).hexdigest()[:20]
     return f"codrai-{concept}-{digest}"
 
 

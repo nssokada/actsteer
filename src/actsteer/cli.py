@@ -3,8 +3,8 @@
 from __future__ import annotations
 
 import argparse
+from collections.abc import Sequence
 from pathlib import Path
-from typing import Sequence
 
 from actsteer import __version__
 from actsteer.core.config import ActSteerConfig

@@ -3,12 +3,13 @@
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
+from collections.abc import Sequence
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import Any, Sequence
+from typing import Any, Literal
 
-from actsteer.core.records import ChatMessage
 from actsteer.core.prompts import PromptSpec, locate_embedded_prompt, resolve_token_spans
+from actsteer.core.records import ChatMessage
 
 
 class ModelFamily(str, Enum):
@@ -108,7 +109,7 @@ class ModelAdapter(ABC):
         self,
         prompt: PromptSpec,
         *,
-        role: str = "user",
+        role: Literal["system", "user", "assistant", "tool"] = "user",
         add_generation_prompt: bool = True,
     ) -> RenderedModelInput:
         """Wrap tagged content in the tokenizer's native chat template."""

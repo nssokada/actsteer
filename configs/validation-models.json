@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "models": [
+    {
+      "family": "gemma",
+      "id": "google/gemma-2-9b-it",
+      "revision": "11c9b309abf73637e4b6f9a3fa1e92e615547819",
+      "tokenizer_revision": "11c9b309abf73637e4b6f9a3fa1e92e615547819",
+      "mode": "chat",
+      "dtype": "bfloat16"
+    },
+    {
+      "family": "llama",
+      "id": "meta-llama/Llama-3.1-8B-Instruct",
+      "revision": "0e9e39f249a16976918f6564b8830bc894c89659",
+      "tokenizer_revision": "0e9e39f249a16976918f6564b8830bc894c89659",
+      "mode": "chat",
+      "dtype": "bfloat16"
+    },
+    {
+      "family": "qwen",
+      "id": "Qwen/Qwen2.5-7B-Instruct",
+      "revision": "a09a35458c702b33eeacc393d103063234e8bc28",
+      "tokenizer_revision": "a09a35458c702b33eeacc393d103063234e8bc28",
+      "mode": "chat",
+      "dtype": "bfloat16"
+    }
+  ]
+}

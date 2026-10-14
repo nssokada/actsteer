@@ -29,6 +29,7 @@ class RecordTests(unittest.TestCase):
             messages=(ChatMessage(role="user", content="A message"),),
         )
         self.assertEqual(plain.text, "A story")
+        assert chat.messages is not None
         self.assertEqual(chat.messages[0].role, "user")
 
     def test_dataset_fingerprint_is_order_independent(self) -> None:
